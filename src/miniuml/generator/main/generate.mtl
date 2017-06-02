@@ -1,0 +1,414 @@
+[comment encoding = UTF-8 /]
+[**
+ * The documentation of the module generate.
+ */]
+[module generate('http://www.example.org/miniuml')]
+
+
+[**
+ * The documentation of the template generateElement.
+ * @param aModel
+ */]
+[template public generateElement(model : Model){CONTADOR : Integer = 100;}]
+
+[comment @main/]
+[for (c : Class | model.elements->filter(Class))]
+
+[comment creacion de controladores/]	
+[file ('app/controllers/'+ c.name.toLowerCase() + 's_controller.rb', false, 'UTF-8')]
+class [c.name+'sController'/] < ApplicationController
+  before_action :set_[c.name.toLowerCase()/], only: ['[:show, :edit, :update, :destroy]'/]
+  
+  # GET /[c.name.toLowerCase()+'s'/]
+  # GET /[c.name.toLowerCase()+'s'/].json
+  def index
+    @[c.name.toLowerCase()+'s'/] = [c.name/].all
+  end
+
+  # GET /[c.name.toLowerCase()+'s'/]/1
+  # GET /[c.name.toLowerCase()+'s'/]/1.json
+  def show
+  end
+
+  # GET /[c.name.toLowerCase()+'s'/]/new
+  def new
+  @[c.name.toLowerCase()/] = [c.name/].new
+[for (a : Attribute | c.attributes)]
+[if((a.type.name = 'belongs_to'))]
+  @[a.name.toLowerCase()/]=[a.name/].all
+[/if]
+[/for]
+  end
+
+  # GET /[c.name.toLowerCase()+'s'/]/1/edit
+  def edit
+  end
+
+  # POST /[c.name.toLowerCase()+'s'/]
+  # POST /[c.name.toLowerCase()+'s'/].json
+  def create
+    @[c.name.toLowerCase()/] = [c.name/].new([c.name.toLowerCase()/]_params)
+[for (a : Attribute | c.attributes)]
+[if((a.type.name = 'belongs_to'))]
+  	@[a.name.toLowerCase()/]=[a.name/].all
+[/if]
+[/for]
+    respond_to do |format|
+      if @[c.name.toLowerCase()/].save
+        format.html { redirect_to @[c.name.toLowerCase()/], mensaje: 'La/el [c.name/] fue creada satisfactoriamente.' }
+        format.json { render :show, status: :created, location: @[c.name.toLowerCase()/] }
+      else
+        format.html { render :new }
+        format.json { render json: @[c.name.toLowerCase()/].errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # PATCH/PUT /[c.name.toLowerCase()+'s'/]/1
+  # PATCH/PUT /[c.name.toLowerCase()+'s'/]/1.json
+  def update
+    respond_to do |format|
+      if @[c.name.toLowerCase()/].update([c.name.toLowerCase()/]_params)
+        format.html { redirect_to @[c.name.toLowerCase()/], notice: 'La/el [c.name/] fue actualizada satisfactoriamente.' }
+        format.json { render :show, status: :ok, location: @[c.name.toLowerCase()/] }
+      else
+        format.html { render :edit }
+        format.json { render json: @[c.name.toLowerCase()/].errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # DELETE /[c.name.toLowerCase()+'s'/]/1
+  # DELETE /[c.name.toLowerCase()+'s'/]/1.json
+  def destroy
+    @[c.name.toLowerCase()/].destroy
+    respond_to do |format|
+      format.html { redirect_to [c.name.toLowerCase()+'s'/]_url, notice: 'La/el [c.name/] fue destruido satisfactoriamente.' }
+      format.json { head :no_content }
+    end
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_[c.name.toLowerCase()/]
+      @[c.name.toLowerCase()/] = [c.name/].find(params['[:id]'/])
+    end
+
+    # Never trust parameters from the scary internet, only allow the white list through.
+    def [c.name.toLowerCase()/]_params
+	  [if (not c.parent.oclIsUndefined())] params.fetch(:[c.name.toLowerCase()/], {}).permit([for (a : Attribute | c.attributes)][if (c.attributes->last() = a)][':'+a.name+',' /][/if][if (c.attributes->last() <> a)][':'+a.name+','/][/if][for (a : Attribute | c.parent.attributes)][if(a.type.eClass().name.equalsIgnoreCase('Class'))][if (c.parent.attributes->last() = a)][':'+a.name+'_id)' /][/if][if (c.parent.attributes->last() <> a)][':'+a.name+'_id,'/][/if][/if][if(not a.type.eClass().name.equalsIgnoreCase('Class'))][if (c.parent.attributes->last() = a)][':'+a.name+')' /][/if][if (c.parent.attributes->last() <> a)][':'+a.name+','/][/if][/if][/for][/for][/if]
+      [if (c.parent.oclIsUndefined())] ['params.require(:'+c.name.toLowerCase()+').permit( '/][for (a : Attribute | c.attributes)][if((a.type.name <> 'has_manyT')and (a.type.name <> 'has_many') and (a.type.name <> 'belongs_to'))][':'+a.name.toLowerCase()/][if ((not (c.attributes->last() = a)) and ((a.type.name <> 'has_manyT')and (a.type.name <> 'has_many') and (a.type.name <> 'belongs_to')))], [/if][/if][/for][for (a : Attribute | c.attributes)][if((a.type.name = 'belongs_to'))][':'+a.name.toLowerCase()+'_id'/][if ((not (c.attributes->last() = a)) and (a.type.name = 'belongs_to'))], [/if][/if][/for][for (a : Attribute | c.attributes)][if ((a.type.name = 'has_many'))][a.name.toLowerCase()+'_ids:[]'/][elseif((a.type.name = 'has_manyT'))][a.name.substitute((a.name.substring(a.name.index(':'))) ,'').toLowerCase()+'_ids:[]'/][/if][if ((not (c.attributes->last() = a)) and ((a.type.name = 'has_manyT') or (a.type.name = 'has_many')))], [/if][/for][/if])
+    end
+end
+[/file]
+
+[comment creacion de helpers/]
+[file ('app/helpers/'+ c.name.toLowerCase() + 's_helper.rb', false, 'UTF-8')]
+module [c.name+'sHelper'/]
+end
+[/file]
+
+[comment creacion de modelos/]
+[file ('app/models/'+ c.name.toLowerCase() + '.rb', false, 'UTF-8')]
+class [c.name/] [if (not c.parent.oclIsUndefined())]['< '+c.parent.name/][/if][if (c.parent.oclIsUndefined())]['< ActiveRecord::Base'/][/if]
+[for (a : Attribute | c.attributes)]
+[if(a.type.name = 'belongs_to')]
+	belongs_to :[a.name.toLowerCase()/]
+[elseif(a.type.name = 'has_one' )]
+	has_one :[a.name.toLowerCase()/]
+[/if]  
+[/for]
+[for (a : Attribute | c.attributes)]
+[if(a.type.name = 'has_many' )]
+	has_many :[a.name.toLowerCase()/]s
+[/if]  
+[/for] 
+[for (a : Attribute | c.attributes)]
+[if(a.type.name = 'has_oneT' )]
+	has_one :[a.name.substitute((a.name.substring(a.name.index(':'))) ,'').toLowerCase()/] , through: :[(a.name.substring(a.name.index(':')+1)).toLowerCase()/]
+[elseif(a.type.name = 'has_manyT' )]
+	has_many :[(a.name.substring(a.name.index(':')+1)).toLowerCase()/]s
+	has_many :[a.name.substitute((a.name.substring(a.name.index(':'))) ,'').toLowerCase()/]s , through: :[(a.name.substring(a.name.index(':')+1)).toLowerCase()/]s
+[/if]  
+[/for]
+def to_s
+   #put your own code here
+end
+end 
+[/file]
+
+[comment creacion de _form.html.erb /]
+[file ('app/views/'+c.name.toLowerCase() +'s/_form.html.erb', false, 'UTF-8')]
+<%= form_for(['@'+c.name.toLowerCase()/]) do |f| %>
+  <% if ['@'+c.name.toLowerCase()/].errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(['@'+c.name.toLowerCase()/].errors.count, "error") %> prohibited this empresa from being saved:</h2>
+
+      <ul>
+      <% ['@'+c.name.toLowerCase()/].errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+     
+[if (c.parent.oclIsUndefined())] 
+	[for (a : Attribute | c.attributes)] 
+  [generarAtributo(a)/]
+	[/for] 
+[/if]
+[if (not c.parent.oclIsUndefined())] 
+	[for (a : Attribute | c.parent.attributes)]
+  [generarAtributo(a)/]
+	[/for]
+	[for (a : Attribute | c.attributes)]
+  [generarAtributo(a)/]
+	[/for]
+[/if]
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+[/file]
+
+[comment creacion de edit.erb/]
+[file ('app/views/'+c.name.toLowerCase() +'s/edit.html.erb', false, 'UTF-8')]
+<h1>Editing </h1>
+
+<%= render 'form' %>
+
+<%= link_to 'Show', ['@'+c.name.toLowerCase()/] %> |
+<%= link_to 'Back', [c.name.toLowerCase()+'s'/]_path %>
+[/file]
+
+[comment creacion de index.erb/]
+[file ('app/views/'+c.name.toLowerCase() +'s/index.html.erb', false, 'UTF-8')]
+<p id="notice"><%= notice %></p>
+
+<h1>Listing [c.name+'s'/]</h1>
+
+<table>
+  <thead>
+    <tr>
+[if (c.parent.oclIsUndefined())] 
+	[for (a : Attribute | c.attributes)] 
+		[if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))]
+		<th>[a.name/]</th>
+		[/if]
+	[/for] 
+[/if]
+[if (not c.parent.oclIsUndefined())] 
+	[for (a : Attribute | c.parent.attributes)]
+		[if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))]
+		<th>[a.name/]</th>
+		[/if]
+	[/for]
+	[for (a : Attribute | c.attributes)]
+		[if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))]
+		<th>[a.name/]</th>
+		[/if]
+	[/for]
+[/if]
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+     <% ['@'+c.name.toLowerCase()+'s'/].each do |[c.name.toLowerCase()/]| %>
+      <tr>
+[if (c.parent.oclIsUndefined())] 
+	[for (a : Attribute | c.attributes)] 
+  		[if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))]
+  		<td><%= [c.name.toLowerCase()+'.'+a.name/] %></td>
+		[/if]
+	[/for] 
+[/if]
+[if (not c.parent.oclIsUndefined())] 
+	[for (a : Attribute | c.parent.attributes)]
+  		[if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))]
+  		<td><%= [c.name.toLowerCase()+'.'+a.name/] %></td>
+		[/if]
+	[/for]
+	[for (a : Attribute | c.attributes)]
+  		[if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))]
+  		<td><%= [c.name.toLowerCase()+'.'+a.name/] %></td>
+		[/if]
+	[/for]
+[/if]
+        <td><%= link_to 'Show', [c.name.toLowerCase()/] %></td>
+        <td><%= link_to 'Edit', edit_[c.name.toLowerCase()/]_path([c.name.toLowerCase()/])  %></td>
+        <td><%= link_to 'Destroy', [c.name.toLowerCase()/], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New [c.name/]', new_[c.name.toLowerCase()/]_path %>
+[/file]
+
+[comment creacion de new.html.erb/]
+[file ('app/views/'+c.name.toLowerCase() +'s/new.html.erb', false, 'UTF-8')]
+<h1>New [c.name/]</h1>
+
+<%= render 'form' %>
+
+<%= link_to 'Back', [c.name.toLowerCase()+'s'/]_path %>
+[/file]
+
+[comment creacion de show.html.erb/]
+[file ('app/views/'+c.name.toLowerCase() +'s/show.html.erb', false, 'UTF-8')]
+<p id="notice"><%= notice %></p>
+
+[if (c.parent.oclIsUndefined())] 
+	[for (a : Attribute | c.attributes)] 
+  		[if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))]
+  		<p>
+  			<strong>[a.name/]:</strong>
+  			<%= ['@'+c.name.toLowerCase()+'.'+a.name/] %>
+		</p>
+		[else]
+		[/if]
+	[/for] 
+[/if]
+[if (not c.parent.oclIsUndefined())] 
+	[for (a : Attribute | c.parent.attributes)]
+  		[if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))]
+  		<p>
+  			<strong>[a.name/]:</strong>
+  			<%= ['@'+c.name.toLowerCase()+'.'+a.name/] %>
+		</p>
+		[else]
+		[/if]
+	[/for]
+	[for (a : Attribute | c.attributes)]
+		<p>
+  			<strong>[a.name/]:</strong>
+  			<%= ['@'+c.name.toLowerCase()+'.'+a.name/] %>
+		</p>
+	[/for]
+[/if]
+
+<%= link_to 'Edit', edit_[c.name.toLowerCase()/]_path(['@'+c.name.toLowerCase()/]) %> |
+<%= link_to 'Back', [c.name.toLowerCase()+'s'/]_path %>
+[/file]
+
+
+[comment creacion de index.json.jbuilder/]
+[file ('app/views/'+c.name.toLowerCase() +'s/index.json.jbuilder', false, 'UTF-8')]
+json.array! ['@'+c.name.toLowerCase()+'s'/] do |[c.name.toLowerCase()/]|
+	json.extract! [c.name.toLowerCase()/], :id[for (a : Attribute | c.attributes)][if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))][' , :'+a.name/][/if][if((a.type.name = 'belongs_to'))][' , :'+a.name.toLowerCase()+'_id'/][/if][/for]
+	json.url [c.name.toLowerCase()/]_url([c.name.toLowerCase()/], format: :json)
+end
+[/file]
+ 
+[comment creacion de show.json.jbuilder/]
+[file ('app/views/'+c.name.toLowerCase() +'s/show.json.jbuilder', false, 'UTF-8')]
+json.extract! @[c.name.toLowerCase()/], :id[for (a : Attribute | c.attributes)][if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))][' , :'+a.name/][/if][if((a.type.name = 'belongs_to'))][' , :'+a.name.toLowerCase()+'_id'/][/if][/for], :created_at, updated_at
+[/file]
+[/for]
+
+[for (c : Class | model.elements->filter(Class))]
+[comment creacion de migrations.rb/]
+[file ('db/migrate/201601234567_create_'+c.name.toLowerCase()+'s'+'.rb', false, 'UTF-8')]
+[if (c.parent.oclIsUndefined())] 
+class Create[c.name+'s'/] < ActiveRecord::Migration
+  def change
+    create_table :[c.name.toLowerCase()+'s'/] do |t|
+[/if]    
+[/file]
+[/for]
+
+
+[for (c : Class | model.elements->filter(Class))]
+[if (c.parent.oclIsUndefined())]
+	 [for (a : Attribute | c.attributes)]
+	 	[if((a.type.name = 'has_one'))]
+[file ('db/migrate/201601234567_create_'+a.name.toLowerCase()+'s'+'.rb', true, 'UTF-8')]
+	t.references :[c.name.toLowerCase()/], index: true
+	add_foreign_key :[c.name.toLowerCase()/]s, :[a.name.toLowerCase()/]s
+[/file]
+		[/if]
+	 [/for] 
+[/if]
+[/for]
+
+
+[for (c : Class | model.elements->filter(Class))]
+[comment creacion de migrations.rb/]
+[file ('db/migrate/201601234567_create_'+c.name.toLowerCase()+'s'+'.rb', true, 'UTF-8')]
+[if (c.parent.oclIsUndefined())] 
+	[for (a : Attribute | c.attributes)]
+		[if((a.type.name = 'belongs_to'))]
+		t.references :[a.name.toLowerCase()/], index: true
+		add_foreign_key :[a.name.toLowerCase()/]s, :[c.name.toLowerCase()/]s
+		[/if] 
+		[if((a.type.name = 'integer') or (a.type.name = 'string') or (a.type.name = 'date') or (a.type.name = 'boolean') or (a.type.name = 'float') or (a.type.name = 'datetime') or  (a.type.name = 'time'))]
+		t.[a.type.name/] :[a.name/]
+		[/if]
+	[/for] 
+	    t.timestamps null: false
+	end
+  end
+end
+[/if]
+[/file]
+[/for]
+
+
+[comment creacion de config/routes.rb/]
+[file ('config/routes.rb', false, 'UTF-8')]
+Rails.application.routes.draw do
+[for (cc : Class | model.elements->filter(Class))]
+  resources :[cc.name.toLowerCase()+'s'/]
+[/for]
+  
+end
+[/file]
+[/template]
+
+
+[template public generarAtributo(a : Attribute)]
+<div class="field">
+[if((a.type.name = 'has_manyT') or (a.type.name = 'has_oneT'))]
+  <%= f.label :[a.name.substitute((a.name.substring(a.name.index(':'))) ,'')/] %><br>
+[else]
+  <%= f.label :[a.name/] %><br>
+[/if] 
+  [generarAtributoComplejo(a)/]
+</div> 
+[/template]
+
+
+[template public generarAtributoComplejo(a : Attribute)]
+[if(a.type.name = 'belongs_to')]
+<%= f.select(:[a.name.toLowerCase()/]_id, options_for_select(['@'+a.name.toLowerCase()/])) %>
+[elseif(a.type.name = 'has_one' )]
+<%= f.select(:[a.name.toLowerCase()/]_id, options_for_select(['@'+a.name.toLowerCase()/])) %>
+[elseif(a.type.name = 'has_many' )]
+<%= f.collection_check_boxes :[a.name.toLowerCase()+'_ids'/], [a.name/].all, :id, :name do |b| %>
+      <div class="collection-check-box">
+        <%= b.check_box %>
+        <%= b.label %>
+      </div>
+    <% end %>
+[elseif(a.type.name = 'has_oneT' )]
+<%= f.select(:[a.name.toLowerCase()/]_id, options_for_select(['@'+a.name.toLowerCase()/])) %>
+[elseif(a.type.name = 'has_manyT' )]
+<%= f.collection_check_boxes :[a.name.substitute((a.name.substring(a.name.index(':'))) ,'').toLowerCase()+'_ids'/], [a.name.substitute((a.name.substring(a.name.index(':'))) ,'')/].all, :id, :name do |b| %>
+      <div class="collection-check-box">
+        <%= b.check_box %>
+        <%= b.label %>
+      </div>
+    <% end %>
+[else]
+[generarAtributoSimple(a)/]
+[/if]  
+[/template]
+
+
+
+[template public generarAtributoSimple(a : Attribute)]
+  <%= f.[if ((a.type.name = 'integer')or (a.type.name = 'float'))]['number_field'/][/if][if (a.type.name = 'string')]['text_field'/][/if][if (a.type.name = 'date')]['date_field'/][/if][if (a.type.name = 'boolean')]['check_box'/][/if][if (a.type.name = 'datetime')]['datetime_local_field'/][/if][if (a.type.name = 'time')]['time_field'/][/if][if (a.type.name = 'float')] :[a.name+', class: :text_field, step: :any'/][else] :[a.name/][/if] %>
+[/template]
