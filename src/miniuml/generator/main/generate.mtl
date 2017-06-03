@@ -97,7 +97,7 @@ class [c.name+'sController'/] < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def [c.name.toLowerCase()/]_params
 	  [if (not c.parent.oclIsUndefined())] params.fetch(:[c.name.toLowerCase()/], {}).permit([for (a : Attribute | c.attributes)][if (c.attributes->last() = a)][':'+a.name+',' /][/if][if (c.attributes->last() <> a)][':'+a.name+','/][/if][for (a : Attribute | c.parent.attributes)][if(a.type.eClass().name.equalsIgnoreCase('Class'))][if (c.parent.attributes->last() = a)][':'+a.name+'_id)' /][/if][if (c.parent.attributes->last() <> a)][':'+a.name+'_id,'/][/if][/if][if(not a.type.eClass().name.equalsIgnoreCase('Class'))][if (c.parent.attributes->last() = a)][':'+a.name+')' /][/if][if (c.parent.attributes->last() <> a)][':'+a.name+','/][/if][/if][/for][/for][/if]
-      [if (c.parent.oclIsUndefined())] ['params.require(:'+c.name.toLowerCase()+').permit( '/][for (a : Attribute | c.attributes)][if((a.type.name <> 'has_manyT')and (a.type.name <> 'has_many') and (a.type.name <> 'belongs_to'))][':'+a.name.toLowerCase()/][if ((not (c.attributes->last() = a)) and ((a.type.name <> 'has_manyT')and (a.type.name <> 'has_many') and (a.type.name <> 'belongs_to')))], [/if][/if][/for][for (a : Attribute | c.attributes)][if((a.type.name = 'belongs_to'))][':'+a.name.toLowerCase()+'_id'/][if ((not (c.attributes->last() = a)) and (a.type.name = 'belongs_to'))], [/if][/if][/for][for (a : Attribute | c.attributes)][if ((a.type.name = 'has_many'))][a.name.toLowerCase()+'_ids:[]'/][elseif((a.type.name = 'has_manyT'))][a.name.substitute((a.name.substring(a.name.index(':'))) ,'').toLowerCase()+'_ids:[]'/][/if][if ((not (c.attributes->last() = a)) and ((a.type.name = 'has_manyT') or (a.type.name = 'has_many')))], [/if][/for][/if])
+      [if (c.parent.oclIsUndefined())] ['params.require(:'+c.name.toLowerCase()+').permit( '/][for (a : Attribute | c.attributes)][if((a.type.name <> 'has_manyT')and (a.type.name <> 'has_many') and (a.type.name <> 'belongs_to'))][':'+a.name/][if ((not (c.attributes->last() = a)) and ((a.type.name <> 'has_manyT')and (a.type.name <> 'has_many') and (a.type.name <> 'belongs_to')))], [/if][/if][/for][for (a : Attribute | c.attributes)][if((a.type.name = 'belongs_to'))][':'+a.name.toLowerCase()+'_id'/][if ((not (c.attributes->last() = a)) and (a.type.name = 'belongs_to'))], [/if][/if][/for][for (a : Attribute | c.attributes)][if ((a.type.name = 'has_many'))][a.name.toLowerCase()+'_ids:[]'/][elseif((a.type.name = 'has_manyT'))][a.name.substitute((a.name.substring(a.name.index(':'))) ,'').toLowerCase()+'_ids:[]'/][/if][if ((not (c.attributes->last() = a)) and ((a.type.name = 'has_manyT') or (a.type.name = 'has_many')))], [/if][/for][/if])
     end
 end
 [/file]
@@ -139,7 +139,7 @@ end
 
 [comment creacion de _form.html.erb /]
 [file ('app/views/'+c.name.toLowerCase() +'s/_form.html.erb', false, 'UTF-8')]
-<%= form_for(['@'+c.name.toLowerCase()/]) do |f| %>
+<%= form_for(['@'+c.name.toLowerCase()/],builder: BootstrapFormBuilder) do |f| %>
   <% if ['@'+c.name.toLowerCase()/].errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(['@'+c.name.toLowerCase()/].errors.count, "error") %> prohibited this empresa from being saved:</h2>
@@ -173,21 +173,25 @@ end
 
 [comment creacion de edit.erb/]
 [file ('app/views/'+c.name.toLowerCase() +'s/edit.html.erb', false, 'UTF-8')]
+	<div class="col-md-11 no-float center-block">
+<div class='col-md-10 col-xs-12 col-sm-11 no-float center-block'>
+  	<div class='card large-padding'>
 <h1>Editing </h1>
-
 <%= render 'form' %>
-
 <%= link_to 'Show', ['@'+c.name.toLowerCase()/] %> |
 <%= link_to 'Back', [c.name.toLowerCase()+'s'/]_path %>
+  </div>
+</div>
+</div>
 [/file]
 
 [comment creacion de index.erb/]
 [file ('app/views/'+c.name.toLowerCase() +'s/index.html.erb', false, 'UTF-8')]
 <p id="notice"><%= notice %></p>
-
+<div class='card large-padding'>
 <h1>Listing [c.name+'s'/]</h1>
 
-<table>
+<table class='table table-striped table-hover'>
   <thead>
     <tr>
 [if (c.parent.oclIsUndefined())] 
@@ -246,15 +250,18 @@ end
 <br>
 
 <%= link_to 'New [c.name/]', new_[c.name.toLowerCase()/]_path %>
+</div>
 [/file]
 
 [comment creacion de new.html.erb/]
 [file ('app/views/'+c.name.toLowerCase() +'s/new.html.erb', false, 'UTF-8')]
+<div class='col-md-10 col-xs-12 col-sm-11 no-float center-block'>
+  	<div class='card large-padding'>
 <h1>New [c.name/]</h1>
-
 <%= render 'form' %>
-
 <%= link_to 'Back', [c.name.toLowerCase()+'s'/]_path %>
+  </div>
+</div>
 [/file]
 
 [comment creacion de show.html.erb/]
@@ -366,18 +373,363 @@ Rails.application.routes.draw do
   
 end
 [/file]
+
+[comment creacion de gemfile /]
+[file ('Gemfile', false, 'UTF-8')]
+source 'https://rubygems.org'
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+gem 'rails', '~> 5.0.3'
+gem 'sqlite3'
+gem 'puma', '~> 3.0'
+gem 'sass-rails', '~> 5.0'
+gem 'uglifier', '>= 1.3.0'
+gem 'coffee-rails', '~> 4.2'
+# gem 'therubyracer', platforms: :ruby
+# Use jquery as the JavaScript library
+gem 'jquery-rails'
+gem 'turbolinks', '~> 5'
+gem 'jbuilder', '~> 2.5'
+# gem 'redis', '~> 3.0'
+# gem 'bcrypt', '~> 3.1.7'
+gem "devise"
+gem "haml-rails"
+gem 'bootstrap-sass'
+gem 'bootstrap-material-design'
+gem 'annotate'
+gem 'figaro'
+gem 'chart-js-rails'
+group :development, :test do
+  gem 'byebug', platform: :mri
+end
+group :development do
+  gem 'web-console', '>= 3.3.0'
+  gem 'listen', '~> 3.0.5'
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'capistrano'
+  gem 'capistrano3-puma'
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rvm'
+end
+gem 'tzinfo-data', platforms: ['[:mingw, :mswin, :x64_mingw, :jruby]'/]
+[/file]
+
+[comment creacion de application.js /]
+[file ('app/assets/javascripts/application.js', false, 'UTF-8')]
+//= require jquery
+//= require jquery_ujs
+//= require turbolinks
+//= require bootstrap
+//= require bootstrap-material-design
+//= require Chart.min
+//= require_tree .
+[/file]
+[comment creacion de app.scss /]
+[file ('app/assets/stylesheets/app.scss', false, 'UTF-8')]
+img{
+	max-width:100% !important;
+}
+.tall-padding{
+	padding: 10px 5px;
+}
+.right-space{
+	margin-right:1em;
+}
+.close-parent{
+	cursor:pointer;
+}
+.payment-btn{
+	border-radius:3px;
+	border:none;
+	color:#fff;
+	padding:1em 2em;
+	outline:none;
+}
+a:hover{
+	color: inherit !important;
+}
+.paypal-btn{
+	background-color:#FE1935;
+}
+.card-btn{
+	background-color:#1D785B;
+}
+[/file]
+[comment creacion de application.css /]
+[file ('app/assets/stylesheets/application.css', false, 'UTF-8')]
+/*
+ *= require common
+ *= require bootstrap-material-design
+ *= require app
+ *= require_self
+ */
+[/file]
+
+[comment creacion de common.css /]
+[file ('app/assets/stylesheets/common.css', false, 'UTF-8')]
+@import "bootstrap";
+
+$green: #16a085;
+$grey: #5A6576;
+$other-grey: #E7ECEE;
+$blue: #058CC5;
+$red: #d2527f;
+$light-blue: #3498DB;
+$teal: #009688;
+/*Texto*/
+.bold{
+	font-weight:bold;
+}
+
+/* Colores */
+.white{
+	background-color:white;
+}
+.white-text{
+	color:white;
+}
+
+.green{
+	background-color: $green;
+}
+.green-text{
+	color: $green;
+}
+.blue{
+	background-color: $blue;
+}
+.blue-text{
+	color: $blue;
+}
+.light-blue{
+	background-color: $light-blue;
+}
+.light-blue-text{
+	color: $light-blue;
+}
+.red{
+	background-color: $red;
+}
+.red-text{
+	color: $red;
+}
+.grey{
+	background-color: $grey;
+}
+.grey-text{
+	color: $grey;
+}
+.other-grey{
+	background-color: $other-grey;
+}
+.other-grey-text{
+	color: $other-grey;
+}
+/* Paddings */
+.large-padding{
+	padding:5px 10px;
+}
+.big-padding{
+	padding:2em;
+}
+.no-padding{
+	padding:0;
+}
+/* Margins */
+.no-margin{
+	margin:0;
+}
+.big-top-space{
+	margin-top:50px;
+}
+.top-space{
+	margin-top:1em;
+}
+.bottom-space{
+	margin-bottom:2em;
+}
+/* Alineamiento */
+.no-float{
+	float: none !important;
+}
+.in-top{
+	vertical-align:top !important;
+}
+.inline-block{
+	float: none !important;
+	display:inline-block;
+	vertical-align:middle;
+	margin-right: -4px;
+}
+.absolute{
+	position:absolute;
+}
+/* Tamaños */
+.small{
+	font-size:12px;
+}
+.normal{
+	font-size: 1.2em;
+}
+.medium{
+	font-size:1.5em;
+}
+.big{
+	font-size:3em;
+}
+.bigger{
+	font-size:4em;
+}
+.ultra-big{
+	font-size:7em;
+}
+[/file]
+
+[comment creacion de lan.scss.erb /]
+[file ('app/assets/stylesheets/lan.scss.erb', false, 'UTF-8')]
+@font-face{
+	font-family:"Kostic";
+	src: url(<%= asset_path("Kostic-Regular.ttf") %>) format('truetype');
+}
+
+@font-face{
+	font-family:"Kostic";
+	src: url(<%= asset_path("Kostic-Bold.ttf") %>) format('truetype');
+	font-weight:bold;
+}
+
+@font-face{
+	font-family:"Kostic";
+	src: url(<%= asset_path("Kostic-Thin.ttf") %>) format('truetype');
+	font-weight:lighter;
+}
+
+.kostic{
+	font-family:"Kostic";
+}
+.circle{
+	border-radius: 50%;
+	display: inline-block;
+	padding-top: 10px;
+	height: 70px;
+	width: 80px;
+}
+.landing-form{
+	border:none;
+	outline:none;
+	border-bottom: solid 1px #E43D7A;
+	font-size: 1.5em;
+	color: #C8376C;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:#E43D7A;
+    opacity:  0.7;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #E43D7A;
+   opacity:  0.7;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #E43D7A;
+   opacity:  0.7;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+   color:    #E43D7A;
+   opacity:  0.7;
+}
+[/file]
+[comment creacion de formbuilder/]
+[file ('app/controllers/bootstrap_form_builder.rb', false, 'UTF-8')]
+class BootstrapFormBuilder < ActionView::Helpers::FormBuilder
+	delegate :content_tag, to: :@template
+	
+	['[:text_field,:text_area,:url_field,:email_field,:number_field,:date_field,:time_field]'/].each do |metodo|
+		define_method metodo do |name,*args|
+			options = args.extract_options!
+			aditional_classes = "form-control floating-label"
+			if options.has_key?(:class)
+				options['[:class]'/] += aditional_classes
+			else
+				options['[:class]'/] = aditional_classes
+			end
+			options['[:placeholder]'/] = name.capitalize
+			content_tag :div, class:"form-group" do
+				super(name,options)
+			end
+		end
+	end
+
+	def errors
+		if object.errors.any?
+			content_tag :div, class:"red large-padding white-text" do
+				content_tag(:h2, "Errores") +
+				content_tag(:ul) do
+					lis = ""
+					object.errors.full_messages.each do |err|
+						lis += content_tag :li, err
+					end
+					lis.html_safe
+				end
+			end
+		end
+	end
+
+	def submit(*args)
+		content_tag :div do
+			super(*args,class:"btn btn-success")
+		end
+	end
+end
+[/file]
+
+[file ('app/views/layouts/application.html.erb', false, 'UTF-8')]
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Aplicacion</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+<div class="blue white-text large-padding bold text-center" style="display:none;">
+		<p class="no-padding no-margin inline-block"></p>
+		<span class="pull-right close-parent">X</span>
+	</div>
+
+
+	<header>
+  <nav class='green'>
+    <ul class='no-list no-padding text-center'>
+      <li class='col-md-12 inline-block tall-padding white-text'>
+        <a class="right-space blue-text" rel="nofollow" data-method="delete" href="/users/sign_out">Cerrar sesión</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+	<div class="col-md-11 no-float center-block">
+		
+		<%= yield %>
+	</div>
+</body>
+</html>
+[/file]
 [/template]
 
 
 [template public generarAtributo(a : Attribute)]
-<div class="field">
 [if((a.type.name = 'has_manyT') or (a.type.name = 'has_oneT'))]
   <%= f.label :[a.name.substitute((a.name.substring(a.name.index(':'))) ,'')/] %><br>
-[else]
+[elseif((a.type.name = 'belongs_to') or (a.type.name = 'boolean'))]
   <%= f.label :[a.name/] %><br>
 [/if] 
   [generarAtributoComplejo(a)/]
-</div> 
 [/template]
 
 
@@ -387,7 +739,7 @@ end
 [elseif(a.type.name = 'has_one' )]
 <%= f.select(:[a.name.toLowerCase()/]_id, options_for_select(['@'+a.name.toLowerCase()/])) %>
 [elseif(a.type.name = 'has_many' )]
-<%= f.collection_check_boxes :[a.name.toLowerCase()+'_ids'/], [a.name/].all, :id, :name do |b| %>
+<%= f.collection_check_boxes :[a.name.toLowerCase()+'_ids'/], [a.name/].all, :id, :id do |b| %>
       <div class="collection-check-box">
         <%= b.check_box %>
         <%= b.label %>
@@ -396,7 +748,7 @@ end
 [elseif(a.type.name = 'has_oneT' )]
 <%= f.select(:[a.name.toLowerCase()/]_id, options_for_select(['@'+a.name.toLowerCase()/])) %>
 [elseif(a.type.name = 'has_manyT' )]
-<%= f.collection_check_boxes :[a.name.substitute((a.name.substring(a.name.index(':'))) ,'').toLowerCase()+'_ids'/], [a.name.substitute((a.name.substring(a.name.index(':'))) ,'')/].all, :id, :name do |b| %>
+<%= f.collection_check_boxes :[a.name.substitute((a.name.substring(a.name.index(':'))) ,'').toLowerCase()+'_ids'/], [a.name.substitute((a.name.substring(a.name.index(':'))) ,'')/].all, :id, :id do |b| %>
       <div class="collection-check-box">
         <%= b.check_box %>
         <%= b.label %>

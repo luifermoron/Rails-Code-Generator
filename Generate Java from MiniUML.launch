@@ -5,7 +5,7 @@
 <booleanAttribute key="org.eclipse.acceleo.ide.ui.COMPUTE_TRACEABILITY" value="false"/>
 <stringAttribute key="org.eclipse.acceleo.ide.ui.LAUNCHING_STRATEGY_DESCRIPTION" value="Java Application"/>
 <stringAttribute key="org.eclipse.acceleo.ide.ui.MODEL_PATH" value="/miniuml/model/Model.xmi"/>
-<stringAttribute key="org.eclipse.acceleo.ide.ui.TARGET_PATH" value="/soquersingo"/>
+<stringAttribute key="org.eclipse.acceleo.ide.ui.TARGET_PATH" value="/football"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/miniuml.generator/src/miniuml/generator/main/Generate.java"/>
 </listAttribute>
@@ -13,6 +13,6 @@
 <listEntry value="1"/>
 </listAttribute>
 <stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="miniuml.generator.main.Generate"/>
-<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="&quot;/home/luifer/workspace/miniuml/model/Model.xmi&quot; &quot;/home/luifer/Development/Rails/soquersingo&quot;"/>
+<stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="&quot;/home/luifer/workspace/miniuml/model/Model.xmi&quot; &quot;/home/luifer/Development/Rails/football&quot;"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="miniuml.generator"/>
 </launchConfiguration>
