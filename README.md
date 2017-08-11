@@ -27,7 +27,7 @@ From a empty Rails project generated, this rails code generator can generate:
       datetime
       time
 4.  Create classes as seen in the video(2:35).       
-    Considerations
+    **Considerations**
     1.  Parent property is not supported. 
     2.  belongs_to and has_many primitive types are only for associations
     3.  When you create a property either belongs_to or has_many the value of the name must be exactly what class you want to be associated
