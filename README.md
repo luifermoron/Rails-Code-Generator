@@ -39,5 +39,6 @@ From a empty Rails project generated, this rails code generator can generate:
  
  **Note.-**
  The BootstrapFormBuilder class and javascript and css files are from Ecommerce - Codigo Facilito course.
+ This project was developed with the help of the miniuml project from Camilo Benavides
  
       
