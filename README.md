@@ -2,8 +2,8 @@
 From a empty Rails project generated, this rails code generator can generate:
   * Models with Associations
   * Controllers
-  * Views wiht material design
-  * Gem file with some usefull gems
+  * Views with material design
+  * Gem file 
   * Migrations files
 
 **prerequisites**
