@@ -33,7 +33,7 @@ From a empty Rails project generated, this rails code generator can generate:
     3.  When you create a property either belongs_to or has_many the value of the name must be exactly what class you want to be associated
     4.  If you want to associate models, in your class, first create all belongs_to Attributes and then all has_many Attributes.
  5.  Execute the project as seen in the video.
- Consideration
+ **Consideration**
  To run the migration files, please change the name of them sorted in order to not have problems.
  
  **Note.-**
